@@ -1,4 +1,6 @@
-const getArtists = (req,res,next)=>{
+const Artist = require('../models/Artist')
+
+const getArtists = async(req,res,next)=>{
   if(Object.keys(req.params).length){
     const {
       firstName,
@@ -15,45 +17,75 @@ const getArtists = (req,res,next)=>{
       console.log(`Searching by ${query}`)
     }
   }
-  res 
-  .status(200)
-  .setHeader('Content-Type', 'application/json')
-  .json({ message: 'Getting the artists' })
+  try {
+    const result = await Artist.find()
+    res 
+    .status(200)
+    .setHeader('Content-Type', 'application/json')
+    .json(result)
+  } catch (err) {
+    next(err)
+  }
 }
 
-const postArtist = (req,res,next)=>{
-  res 
-  .status(201)
-  .setHeader('Content-Type', 'application/json')
-  .json({ message: 'Adding an artist' })
+const postArtist = async(req,res,next)=>{
+  try {
+    const result = await Artist.create(req.body)
+    res 
+    .status(201)
+    .setHeader('Content-Type', 'application/json')
+    .json(result)
+  } catch (err) {
+    next(err)
+  }
 }
 
-const deleteArtists = (req,res,next)=>{
-  res 
-  .status(200)
-  .setHeader('Content-Type', 'application/json')
-  .json({ message: 'Deleting the artists' })
+const deleteArtists = async(req,res,next)=>{
+  try {
+    const result = await Artist.deleteMany()
+    res 
+    .status(200)
+    .setHeader('Content-Type', 'application/json')
+    .json(result)
+  } catch (err) {
+    next(err)
+  }
 }
 
-const getArtist = (req,res,next)=>{
-  res
-  .status(200)
-  .setHeader('content-type','application/json')
-  .json({message: `Show me the artist with artist ID of ${req.params.artistId}`})
+const getArtist = async(req,res,next)=>{
+  try {
+    const result = await Artist.findById(req.params.artistId)
+    res
+    .status(200)
+    .setHeader('content-type','application/json')
+    .json(result)
+  } catch (err) {
+    next(err)
+  }
 }
 
-const updateArtist = (req,res,next)=>{
-  res
-  .status(200)
-  .setHeader('content-type','application/json')
-  .json({message: `Update the artist with artist ID of ${req.params.artistId}`})
+const updateArtist = async(req,res,next)=>{
+  try {
+    const result = await Artist.findByIdAndUpdate(req.params.artistId, req.body, {new: true})
+    res
+    .status(200)
+    .setHeader('content-type','application/json')
+    .json(result)
+  } catch (err) {
+    next(err)
+  }
 }
 
-const deleteArtist = (req,res,next)=>{
-  res
-  .status(200)
-  .setHeader('content-type','application/json')
-  .json({message: `Delete the artist with artist ID of ${req.params.artistId}`})
+const deleteArtist = async(req,res,next)=>{
+  try {
+    const result = await Artist.findByIdAndDelete(req.params.artistId)
+    res
+    .status(200)
+    .setHeader('content-type','application/json')
+    .json(result)
+  } catch (err) {
+    next(err)
+  }
 }
 module.exports = {
   getArtists,

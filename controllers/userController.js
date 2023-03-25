@@ -1,4 +1,7 @@
-const getUsers = (req,res,next)=>{
+const User = require('../models/User')
+
+
+const getUsers = async(req,res,next)=>{
   if(Object.keys(req.params).length){
     const {
       userName,
@@ -13,45 +16,75 @@ const getUsers = (req,res,next)=>{
       console.log(`Searching by ${query}`)
     }
   }
-  res 
-  .status(200)
-  .setHeader('Content-Type', 'application/json')
-  .json({ message: 'Getting the users' })
+  try {
+    const result = await User.find()
+    res 
+    .status(200)
+    .setHeader('Content-Type', 'application/json')
+    .json(result)
+  } catch (err) {
+    next(err)
+  }
 }
 
-const postUser = (req,res,next)=>{
-  res 
-  .status(201)
-  .setHeader('Content-Type', 'application/json')
-  .json({ message: 'Adding a user' })
+const postUser = async(req,res,next)=>{
+  try {
+    const result = await User.create(req.body)
+    res 
+    .status(201)
+    .setHeader('Content-Type', 'application/json')
+    .json(result)
+  } catch (err) {
+    next(err)
+  }
 }
 
-const deleteUsers = (req,res,next)=>{
-  res 
-  .status(200)
-  .setHeader('Content-Type', 'application/json')
-  .json({ message: 'Deleting the users' })
+const deleteUsers = async(req,res,next)=>{
+  try {
+    const result = await User.deleteMany()
+    res 
+    .status(200)
+    .setHeader('Content-Type', 'application/json')
+    .json(result)
+  } catch (err) {
+    next(err)
+  }
 }
 
-const getUser = (req,res,next)=>{
-  res
-  .status(200)
-  .setHeader('content-type','application/json')
-  .json({message: `Show me the user with user ID of ${req.params.userId}`})
+const getUser = async(req,res,next)=>{
+  try {
+    const result = await User.findById(req.params.userId)
+    res
+    .status(200)
+    .setHeader('content-type','application/json')
+    .json(result)
+  } catch (err) {
+    next(err)
+  }
 }
 
-const updateUser = (req,res,next)=>{
-  res
-  .status(200)
-  .setHeader('content-type','application/json')
-  .json({message: `Update the user with user ID of ${req.params.userId}`})
+const updateUser = async(req,res,next)=>{
+  try {
+    const result = await User.findByIdAndUpdate(req.params.userId, req.body, {new:true})
+    res
+    .status(200)
+    .setHeader('content-type','application/json')
+    .json(result)
+  } catch (err) {
+    next(err)
+  }
 }
 
-const deleteUser = (req,res,next)=>{
-  res
-  .status(200)
-  .setHeader('content-type','application/json')
-  .json({message: `Delete the user with user ID of ${req.params.userId}`})
+const deleteUser = async(req,res,next)=>{
+  try {
+    const result = await User.findByIdAndDelete(req.params.userId)
+    res
+    .status(200)
+    .setHeader('content-type','application/json')
+    .json(result)
+  } catch (err) {
+    next(err)
+  }
 }
 
 
