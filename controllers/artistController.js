@@ -1,24 +1,30 @@
 const Artist = require('../models/Artist')
 
 const getArtists = async(req,res,next)=>{
+
+  const options = {}
+  const filter = {}
+
   if(Object.keys(req.params).length){
     const {
       firstName,
       lastName,
-      genre
+      genre,
+      sortByGenre,
+      limit
     } = req.params
-    const filter = []
+ 
 
-    if(firstName) filter.push(firstName)
-    if(lastName) filter.push(lastName)
-    if(genre) filter.push(genre)
-
-    for(const query in filter){
-      console.log(`Searching by ${query}`)
+    if(firstName) filter.firstName = firstName
+    if(lastName) filter.lastName = lastName
+    if(genre) filter.genre = genre
+    if(limit) options.limit = limit
+    if(sortByGenre) options.sort = {
+      genre: sortByGenre
     }
   }
   try {
-    const result = await Artist.find()
+    const result = await Artist.find({}, filter, options)
     res 
     .status(200)
     .setHeader('Content-Type', 'application/json')
