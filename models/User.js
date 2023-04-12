@@ -61,8 +61,8 @@ UserSchema.pre('save', function(next){
   next()
 })
 
-UserSchema.post('save',function(next){ //cant get this to work. This doesnt reference the users directly and therefor cannot uppercase
-  this.gender.toUpperCase()
+UserSchema.post('save',function({},next){ //cant get this to work. This doesnt reference the users directly and therefor cannot uppercase
+  this.gender = this.gender.toUpperCase()
   next()
 })
 

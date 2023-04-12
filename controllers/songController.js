@@ -5,21 +5,20 @@ const getSongs = async(req,res,next)=>{
 
   const options = {}
   const filter = {}
-  console.group(req.params)
-  if(Object.keys(req.params).length){
+  if(Object.keys(req.query).length){
     const {
       songTitle,
       artist,
       genre,
       sortByArtist,
       limit
-    } = req.params
+    } = req.query
 
     
 
-    if(songTitle) filter.songTitle = songTitle
-    if(artist) filter.artist = artist
-    if(genre) filter.genre = genre
+    if(songTitle) filter.songTitle = true
+    if(artist) filter.artist = true
+    if(genre) filter.genre = true
 
     if(limit) options.limit = limit
     if(sortByArtist) options.sort = {

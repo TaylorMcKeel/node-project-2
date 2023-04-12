@@ -5,19 +5,19 @@ const getArtists = async(req,res,next)=>{
   const options = {}
   const filter = {}
 
-  if(Object.keys(req.params).length){
+  if(Object.keys(req.query).length){
     const {
       firstName,
       lastName,
       genre,
       sortByGenre,
       limit
-    } = req.params
+    } = req.query
  
 
-    if(firstName) filter.firstName = firstName
-    if(lastName) filter.lastName = lastName
-    if(genre) filter.genre = genre
+    if(firstName) filter.firstName = true
+    if(lastName) filter.lastName = true
+    if(genre) filter.genre = true
     if(limit) options.limit = limit
     if(sortByGenre) options.sort = {
       genre: sortByGenre
