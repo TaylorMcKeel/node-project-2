@@ -129,7 +129,7 @@ const postSongRating = async(req,res,next)=>{
 
 const deleteSongRatings = async(req,res,next)=>{
   try {
-    const result = await Item.findById(rreq.params.itemsId)
+    const result = await Song.findById(rreq.params.songId)
     result.ratings = []
     await result.save()
 
@@ -142,6 +142,66 @@ const deleteSongRatings = async(req,res,next)=>{
   }
 }
 
+const getSongRating = async(req,res,next)=>{
+  try {
+    const result = await Song.findById(req.params.SongId)
+    let rating = result.ratings.find(rating => (rating._id).equals(req.params.ratingId))
+    if(!rating) rating = {msg: `No rating douns with id ${req.params.ratingId}`}
+
+    res
+    .status(200)
+    .setHeader('Content-Type','application.json')
+    .json(rating)
+  } catch (err) {
+    next(err)
+  }
+}
+
+const updateSongRating = async(req,res,next)=>{
+  try {
+    const result = await Song.findById (req.params.songId)
+    let rating = result.ratings.find(rating => (req.params.ratingId).equals(rating._id))
+
+    if(rating){
+      const ratingIndexPosition = result.ratings.indexOf(rating)
+      result.ratings.splice(ratingindexPosition, 1, req.body)
+      rating = req.body
+      await rating.save()
+    }else{
+      rating = {msg: `No rating found with id ${req.params.ratingId}`}
+    }
+
+    res
+    .status(200)
+    .setHeader('Content-type','application/json')
+    .json(rating)
+  } catch (err) {
+    next(err)
+  }
+}
+
+const deleteSongRating = async(req,res,next)=>{
+  try {
+    const result = Song.findById(req.params.songId)
+    const rating = result.ratings.find(result => (req.params.ratingId).equals(rating._id))
+
+    if(rating){
+      const ratingIndexPosition = result.ratings.indexOf(rating)
+      result.ratings.splice(ratingIndexPosition, 1)
+      rating = {msg: `Succesfully removed rating with id ${req.params.ratingId}`}
+      await result.save()
+    }else{
+      rating = {msg: `No rating found with id ${req.params.ratingId}`}
+    }
+
+    res
+    .status(200)
+    .setHeader('Content-Type','application/json')
+    .json(rating)
+  } catch (err) {
+    next(err)
+  }
+}
 
 module.exports = {
   getSongs,
@@ -152,5 +212,8 @@ module.exports = {
   deleteSong,
   getSongRatings,
   postSongRating,
-  deleteSongRatings
+  deleteSongRatings,
+  getSongRating,
+  updateSongRating,
+  deleteSongRating
 }
