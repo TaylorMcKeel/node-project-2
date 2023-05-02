@@ -102,6 +102,24 @@ const sendTokenResponse = (user, statusCode, res)=>{
   .json(token)
 }
 
+const login = async(req,res,next)=>{
+  const {email, password} = req.body
+  if(!email || !password){
+    throw new Error('Please provide email and password')
+  }
+
+  const user = await User.findOne({email}).select('+password')
+
+  if(!user){
+    throw new Error('invalid credentials')
+  }
+
+  const isMatch = await user.matchPasswords(password)
+
+  if(!isMatch) throw new Error('invalid Credentials')
+
+  sendTokenResponse(user,200,res)
+}
 
 module.exports = {
   getUsers,
@@ -109,5 +127,6 @@ module.exports = {
   deleteUsers,
   getUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  login
 }
