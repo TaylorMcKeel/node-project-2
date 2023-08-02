@@ -1,8 +1,6 @@
-const User = require("../../models/User")
 
 const adminValidator = async(req,res,next)=>{
-  const user = await User.findById(req.userId)
-  if(user.admin){
+  if(req.user.admin){
     next()
   }else{
     res
